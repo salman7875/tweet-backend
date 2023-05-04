@@ -4,15 +4,16 @@ Tech used:- Node js, express, mongodb
 
 ## Features
 
-# User
+### User
 
 - Signup
 - Login
 - Follow
 - Unfollow
+- Search User
 - User Info
 
-# Tweet
+### Tweet
 
 - Create Tweet
 - Delete Tweet
