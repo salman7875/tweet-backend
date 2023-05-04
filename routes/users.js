@@ -6,7 +6,8 @@ const {
   getCurrentUser,
   getSingleUser,
   getUserFollowers,
-  getUserFollowings
+  getUserFollowings,
+  searchUser
 } = require('../controllers/User')
 const validateToken = require('../middleware/auth')
 
@@ -16,7 +17,8 @@ router.route('/register').post(signup)
 router.route('/login').post(login)
 router.route('/users').get(getUsers)
 router.route('/users/:id').get(getSingleUser)
-router.route('/users/current').get(validateToken, getCurrentUser)
+router.route('/find').get(searchUser)
+router.route('/current').get(validateToken, getCurrentUser)
 router.route('/users/follow/:id').post(validateToken, followOrUnfollowUser)
 router.route('/users/:id/followers').get(getUserFollowers)
 router.route('/users/:id/followings').get(getUserFollowings)

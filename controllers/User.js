@@ -114,6 +114,25 @@ const getSingleUser = async (req, res) => {
   }
 }
 
+const searchUser = async (req, res) => {
+  try {
+    const { username } = req.body
+    const user = await User.find({ username })
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'No user found'
+      })
+    }
+    res.status(200).json({ success: true, user })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}
+
 const followOrUnfollowUser = async (req, res) => {
   try {
     // find user to follow
@@ -195,6 +214,7 @@ module.exports = {
   getUsers,
   getCurrentUser,
   getSingleUser,
+  searchUser,
   followOrUnfollowUser,
   getUserFollowers,
   getUserFollowings
