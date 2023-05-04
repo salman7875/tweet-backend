@@ -14,9 +14,16 @@ const signup = async (req, res) => {
 
     user = await User.create({ username, email, password, avatar })
     const token = jwt.sign({ _id: user._id }, 'twitter', { expiresIn: '90d' })
-    res.status(201).json({ success: true, user: user, token: token })
+    res.status(201).json({
+      success: true,
+      user: user,
+      token: token
+    })
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message })
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
   }
 }
 
@@ -25,9 +32,10 @@ const login = async (req, res) => {
     const { email, password } = req.body
     let user = await User.findOne({ email })
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'No user with this email!' })
+      return res.status(400).json({
+        success: false,
+        message: 'No user with this email!'
+      })
     }
 
     if (user && user.password === password) {
@@ -48,7 +56,10 @@ const login = async (req, res) => {
       throw new Error('Email or password is not valid!')
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message })
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
   }
 }
 
@@ -57,16 +68,28 @@ const getUsers = async (req, res) => {
     const users = await User.find()
     res.status(200).json({ success: true, users })
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message })
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
   }
 }
 
 const getCurrentUser = async (req, res) => {
   try {
     const currentUser = await User.findById(req.user.id)
+    if (!currentUser) {
+      res.status(404).json({
+        success: false,
+        message: 'No user found'
+      })
+    }
     res.status(200).json(currentUser)
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message })
+    res.status(500).json({
+      success: false,
+      message: err
+    })
   }
 }
 
@@ -74,11 +97,20 @@ const getSingleUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
     if (!user) {
-      res.status(404).json({ success: false, message: 'No user found!' })
+      res.status(404).json({
+        success: false,
+        message: 'No user found!'
+      })
     }
-    res.status(200).json({ success: true, user })
+    res.status(200).json({
+      success: true,
+      user
+    })
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message })
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
   }
 }
 
@@ -112,15 +144,58 @@ const followOrUnfollowUser = async (req, res) => {
       })
     }
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message })
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}
+
+const getUserFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    const ids = user.followers.map(follower => follower)
+
+    const query = { _id: { $in: ids } }
+    const userFollowers = await User.find(query)
+    res.status(200).json({
+      success: true,
+      userFollowers
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}
+
+const getUserFollowings = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    const ids = user.followings.map(following => following)
+
+    const query = { _id: { $in: ids } }
+    const userFollowings = await User.find(query)
+    res.status(200).json({
+      success: true,
+      userFollowings
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
   }
 }
 
 module.exports = {
   signup,
   login,
-  followOrUnfollowUser,
   getUsers,
   getCurrentUser,
-  getSingleUser
+  getSingleUser,
+  followOrUnfollowUser,
+  getUserFollowers,
+  getUserFollowings
 }
