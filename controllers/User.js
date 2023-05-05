@@ -3,7 +3,7 @@ const User = require('../models/user')
 
 const signup = async (req, res) => {
   try {
-    const { username, email, password, avatar } = req.body
+    const { username, email, password, avatar, bgImg, name, bio } = req.body
     let user = await User.findOne({ email })
     if (user) {
       return res.status(400).json({
@@ -12,7 +12,15 @@ const signup = async (req, res) => {
       })
     }
 
-    user = await User.create({ username, email, password, avatar })
+    user = await User.create({
+      username,
+      email,
+      password,
+      avatar,
+      bgImg,
+      name,
+      bio
+    })
     const token = jwt.sign({ _id: user._id }, 'twitter', { expiresIn: '90d' })
     res.status(201).json({
       success: true,
@@ -29,12 +37,12 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body
-    let user = await User.findOne({ email })
+    const { username, password } = req.body
+    let user = await User.findOne({ username })
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: 'No user with this email!'
+        message: 'No user with this username!'
       })
     }
 
@@ -43,7 +51,7 @@ const login = async (req, res) => {
         {
           user: {
             id: user._id,
-            email: user.email,
+            username: user.username,
             username: user.username
           }
         },
