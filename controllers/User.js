@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const Tweet = require('../models/tweet')
 
 const signup = async (req, res) => {
   try {
@@ -73,8 +74,11 @@ const login = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find()
-    res.status(200).json({ success: true, users })
+    const users = await User.find().limit(4)
+    res.status(200).json({
+      success: true,
+      users
+    })
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -133,6 +137,27 @@ const searchUser = async (req, res) => {
       })
     }
     res.status(200).json({ success: true, user })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}
+
+const getUserWithTweets = async (req, res) => {
+  try {
+    const users = await User.find()
+    const userWithTweet = users.filter(user => user.tweets.length > 0)
+    const ids = userWithTweet.flatMap(user => user.tweets)
+    const tweets = await Tweet.find({ _id: { $in: ids } })
+    const copyTweet = tweets.slice()
+    const copyUser = userWithTweet.slice()
+
+    res.status(200).json({
+      success: true,
+      user: copyUser
+    })
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -223,6 +248,7 @@ module.exports = {
   getCurrentUser,
   getSingleUser,
   searchUser,
+  getUserWithTweets,
   followOrUnfollowUser,
   getUserFollowers,
   getUserFollowings
