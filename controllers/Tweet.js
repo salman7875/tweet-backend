@@ -102,7 +102,7 @@ const updateTweet = async (req, res) => {
 // GET ALL
 const getAllTweets = async (req, res) => {
   try {
-    const tweets = await Tweet.find()
+    const tweets = await Tweet.find().sort({ createdAt: -1 })
     res.status(200).json({ success: true, resultes: tweets.length, tweets })
   } catch (err) {
     res.status(500).json({
@@ -146,6 +146,25 @@ const getSingleTweet = async (req, res) => {
       message: err.message
     })
   }
+}
+
+const getTweetOfParticularUser = async (req, res) => {
+  const user = await User.findById(req.params.id)
+  const tweetId = user.tweets.map(tweet => tweet)
+
+  const tweets = await Tweet.find({ _id: { $in: tweetId } })
+
+  if (!tweets) {
+    res.status(404).json({
+      success: false,
+      message: 'No Tweets found with this User'
+    })
+  }
+
+  res.status(200).json({
+    success: true,
+    tweets
+  })
 }
 
 const likeOrUnlikeTweet = async (req, res) => {
@@ -252,6 +271,7 @@ module.exports = {
   getAllTweets,
   getMyTweets,
   getSingleTweet,
+  getTweetOfParticularUser,
   likeOrUnlikeTweet,
   createComment,
   deleteComment
