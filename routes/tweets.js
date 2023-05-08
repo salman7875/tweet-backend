@@ -7,7 +7,8 @@ const {
   getSingleTweet,
   likeOrUnlikeTweet,
   createComment,
-  deleteComment
+  deleteComment,
+  getTweetOfParticularUser
 } = require('../controllers/Tweet')
 const validateToken = require('../middleware/auth')
 
@@ -16,12 +17,13 @@ const router = require('express').Router()
 router.route('/').get(getAllTweets)
 router.route('/current').get(validateToken, getMyTweets)
 router.route('/create').post(validateToken, createTweet)
+router.route('/:id').get(getTweetOfParticularUser)
 router
   .route('/:id')
   .post(validateToken, createComment)
   .delete(validateToken, deleteComment)
 router
-  .route('/:id')
+  .route('/action/:id')
   .get(getSingleTweet)
   .post(validateToken, likeOrUnlikeTweet)
   .put(validateToken, updateTweet)
