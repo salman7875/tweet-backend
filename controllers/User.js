@@ -241,6 +241,26 @@ const getUserFollowings = async (req, res) => {
   }
 }
 
+const getTweetsOfFollowing = async (req, res) => {
+  try {
+    // GET FOLLOWING USER WITH TWEETS
+    const currentUser = await User.findById(req.user.id)
+
+    // QUERY TWEETS OF ABOVE USER
+    const ids = currentUser.followings.map(following => following)
+    const tweets = await Tweet.find({ author: { $in: ids } })
+    res.status(200).json({
+      success: true,
+      tweets
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}
+
 module.exports = {
   signup,
   login,
@@ -251,5 +271,6 @@ module.exports = {
   getUserWithTweets,
   followOrUnfollowUser,
   getUserFollowers,
-  getUserFollowings
+  getUserFollowings,
+  getTweetsOfFollowing
 }

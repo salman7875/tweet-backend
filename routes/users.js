@@ -8,7 +8,8 @@ const {
   getUserFollowers,
   getUserFollowings,
   searchUser,
-  getUserWithTweets
+  getUserWithTweets,
+  getTweetsOfFollowing
 } = require('../controllers/User')
 const validateToken = require('../middleware/auth')
 
@@ -16,6 +17,7 @@ const router = require('express').Router()
 
 router.route('/register').post(signup)
 router.route('/login').post(login)
+router.route('/feed').get(validateToken, getTweetsOfFollowing)
 router.route('/users').get(getUsers)
 router.route('/users/:id').get(getSingleUser)
 router.route('/find').post(searchUser)
