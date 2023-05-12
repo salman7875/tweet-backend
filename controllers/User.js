@@ -212,7 +212,7 @@ const getUserFollowers = async (req, res) => {
     const userFollowers = await User.find(query)
     res.status(200).json({
       success: true,
-      userFollowers
+      users: userFollowers
     })
   } catch (err) {
     res.status(500).json({
@@ -231,7 +231,7 @@ const getUserFollowings = async (req, res) => {
     const userFollowings = await User.find(query)
     res.status(200).json({
       success: true,
-      userFollowings
+      users: userFollowings
     })
   } catch (err) {
     res.status(500).json({
