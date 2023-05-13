@@ -248,7 +248,7 @@ const getTweetsOfFollowing = async (req, res) => {
 
     // QUERY TWEETS OF ABOVE USER
     const ids = currentUser.followings.map(following => following)
-    const tweets = await Tweet.find({ author: { $in: ids } })
+    const tweets = await Tweet.find({ author: { $in: ids } }).populate('author')
     res.status(200).json({
       success: true,
       tweets
