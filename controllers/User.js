@@ -212,7 +212,7 @@ const getUserFollowers = async (req, res) => {
     const userFollowers = await User.find(query)
     res.status(200).json({
       success: true,
-      userFollowers
+      users: userFollowers
     })
   } catch (err) {
     res.status(500).json({
@@ -231,7 +231,7 @@ const getUserFollowings = async (req, res) => {
     const userFollowings = await User.find(query)
     res.status(200).json({
       success: true,
-      userFollowings
+      users: userFollowings
     })
   } catch (err) {
     res.status(500).json({
@@ -248,7 +248,7 @@ const getTweetsOfFollowing = async (req, res) => {
 
     // QUERY TWEETS OF ABOVE USER
     const ids = currentUser.followings.map(following => following)
-    const tweets = await Tweet.find({ author: { $in: ids } })
+    const tweets = await Tweet.find({ author: { $in: ids } }).populate('author')
     res.status(200).json({
       success: true,
       tweets
