@@ -5,6 +5,14 @@ const Tweet = require('../models/tweet')
 const signup = async (req, res) => {
   try {
     const { username, email, password, avatar, bgImg, name, bio } = req.body
+
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Fill up the field!'
+      })
+    }
+
     let user = await User.findOne({ email })
     if (user) {
       return res.status(400).json({
@@ -39,6 +47,14 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { username, password } = req.body
+
+    if (!username || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Fill up the field!'
+      })
+    }
+
     let user = await User.findOne({ username })
     if (!user) {
       return res.status(400).json({
