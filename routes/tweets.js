@@ -8,7 +8,8 @@ const {
   likeOrUnlikeTweet,
   createComment,
   deleteComment,
-  getTweetOfParticularUser
+  getTweetOfParticularUser,
+  getTweetComment
 } = require('../controllers/Tweet')
 const validateToken = require('../middleware/auth')
 
@@ -18,6 +19,7 @@ router.route('/').get(getAllTweets)
 router.route('/current').get(validateToken, getMyTweets)
 router.route('/create').post(validateToken, createTweet)
 router.route('/:id').get(getTweetOfParticularUser)
+router.route('/comments/:id').get(getTweetComment)
 router
   .route('/:id')
   .post(validateToken, createComment)
