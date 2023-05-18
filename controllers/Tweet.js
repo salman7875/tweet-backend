@@ -205,7 +205,7 @@ const createComment = async (req, res) => {
   try {
     const tweet = await Tweet.findById(req.params.id)
     if (!tweet) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: 'Tweet Not Found'
       })
@@ -264,6 +264,27 @@ const deleteComment = async (req, res) => {
   }
 }
 
+const getTweetComment = async (req, res) => {
+  try {
+    const userComment = await Tweet.findById(req.params.id)
+      .select('createdAt comments')
+      .populate({
+        path: 'comments.user',
+        select: `name avatar`
+      })
+
+    res.status(200).json({
+      success: true,
+      userComment
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+}
+
 module.exports = {
   createTweet,
   deleteTweets,
@@ -274,5 +295,6 @@ module.exports = {
   getTweetOfParticularUser,
   likeOrUnlikeTweet,
   createComment,
-  deleteComment
+  deleteComment,
+  getTweetComment
 }

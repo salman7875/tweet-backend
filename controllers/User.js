@@ -90,7 +90,7 @@ const login = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find().limit(4)
+    const users = await User.find({ _id: { $ne: req.user.id } }).limit(5)
     res.status(200).json({
       success: true,
       users
