@@ -267,10 +267,10 @@ const deleteComment = async (req, res) => {
 const getTweetComment = async (req, res) => {
   try {
     const userComment = await Tweet.findById(req.params.id)
-      .select('createdAt comments')
+      .select('comments')
       .populate({
         path: 'comments.user',
-        select: `name avatar`
+        select: `name avatar createdAt`
       })
 
     res.status(200).json({
