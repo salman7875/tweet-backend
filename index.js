@@ -13,6 +13,9 @@ const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.DB)
     console.log('MongoDB Connected: ' + conn.connection.host)
+    
+    useNewUrlParser: "true",
+    useUnifiedTopology: "true"
   } catch (err) {
     console.log(err)
     process.exit(1)
