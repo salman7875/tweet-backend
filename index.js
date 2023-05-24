@@ -11,11 +11,13 @@ const app = express()
 // DB CONNECTION
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.DB)
+    const conn = await mongoose.connect(process.env.DB, {
+      useNewUrlParser: "true",
+      useUnifiedTopology: "true")
+    }
     console.log('MongoDB Connected: ' + conn.connection.host)
     
-    useNewUrlParser: "true",
-    useUnifiedTopology: "true"
+    
   } catch (err) {
     console.log(err)
     process.exit(1)
