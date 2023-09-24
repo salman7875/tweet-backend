@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String },
     avatar: { type: String },
     bgImg: { type: String },
-    bio: { type: String },
+    bio: { type: String, default: '' },
     email: { type: String, required: true },
     password: { type: String, required: true },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],

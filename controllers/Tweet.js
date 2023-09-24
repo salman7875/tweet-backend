@@ -6,6 +6,7 @@ const createTweet = async (req, res) => {
   try {
     const newTweetData = {
       content: req.body.content,
+      caption: req.body.caption,
       author: req.user.id
     }
 
@@ -183,14 +184,16 @@ const likeOrUnlikeTweet = async (req, res) => {
       await tweet.save()
       return res.status(200).json({
         success: true,
-        message: 'Tweet Unliked'
+        message: 'Tweet Unliked',
+        likes: tweet.likes.length
       })
     } else {
       tweet.likes.push(req.user.id)
       await tweet.save()
       return res.status(200).json({
         success: true,
-        message: 'Tweet Liked'
+        message: 'Tweet Liked',
+        likes: tweet.likes.length
       })
     }
   } catch (err) {
@@ -203,6 +206,10 @@ const likeOrUnlikeTweet = async (req, res) => {
 
 const createComment = async (req, res) => {
   try {
+    const { comment } = req.body
+    if (!comment) {
+      return res.status(400).json({ success: false, message: 'Empty comment not allowed!' })
+    }
     const tweet = await Tweet.findById(req.params.id)
     if (!tweet) {
       return res.status(404).json({
@@ -210,8 +217,7 @@ const createComment = async (req, res) => {
         message: 'Tweet Not Found'
       })
     }
-
-    tweet.comments.push({ user: req.user.id, comment: req.body.comment })
+    tweet.comments.push({ user: req.user.id, comment: comment })
     await tweet.save()
     res.status(200).json({
       success: true,
@@ -270,7 +276,7 @@ const getTweetComment = async (req, res) => {
       .select('comments')
       .populate({
         path: 'comments.user',
-        select: `name avatar createdAt`
+        select: `name username avatar createdAt`
       })
 
     res.status(200).json({
@@ -288,7 +294,6 @@ const getTweetComment = async (req, res) => {
 module.exports = {
   createTweet,
   deleteTweets,
-  updateTweet,
   getAllTweets,
   getMyTweets,
   getSingleTweet,

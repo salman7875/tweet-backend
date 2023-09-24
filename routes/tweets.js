@@ -1,7 +1,6 @@
 const {
   createTweet,
   deleteTweets,
-  updateTweet,
   getAllTweets,
   getMyTweets,
   getSingleTweet,
@@ -21,14 +20,13 @@ router.route('/create').post(validateToken, createTweet)
 router.route('/:id').get(getTweetOfParticularUser)
 router.route('/comments/:id').get(getTweetComment)
 router
-  .route('/:id')
+  .route('/:id')  
   .post(validateToken, createComment)
   .delete(validateToken, deleteComment)
 router
   .route('/action/:id')
   .get(getSingleTweet)
-  .post(validateToken, likeOrUnlikeTweet)
-  .put(validateToken, updateTweet)
+  .put(validateToken, likeOrUnlikeTweet)
   .delete(validateToken, deleteTweets)
 
 module.exports = router

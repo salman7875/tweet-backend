@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const tweetSchema = new mongoose.Schema(
   {
     content: { type: String, required: true },
+    caption: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     comments: [
