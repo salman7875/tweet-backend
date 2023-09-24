@@ -20,6 +20,11 @@ app.use(express.urlencoded({limit: '50mb'}));
 app.use('/api', userRoutes)
 app.use('/api/tweets', tweetRoutes)
 
+
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'TweetSpot backend is ready....' })
+})
+
 // SERVER LISTENING
 const PORT = process.env.PORT || 6000
 app.listen(PORT, async () => {
