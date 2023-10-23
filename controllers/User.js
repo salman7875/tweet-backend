@@ -6,14 +6,12 @@ const Tweet = require("../models/tweet");
 const signup = async (req, res) => {
   try {
     const { username, email, password, avatar, name } = req.body;
-
     if (!username || !email || !password || !name) {
       return res.status(400).json({
         success: false,
         message: "Fill up the field!",
       });
     }
-
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({
